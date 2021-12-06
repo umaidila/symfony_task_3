@@ -23,6 +23,11 @@ class ToDo
     public $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $user;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -60,5 +65,17 @@ class ToDo
         return [
             "name" => $this->getName(),
         ];
+    }
+
+    public function getUser(): ?string
+    {
+        return $this->user;
+    }
+
+    public function setUser(string $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

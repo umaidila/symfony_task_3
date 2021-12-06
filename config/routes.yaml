@@ -9,7 +9,3 @@ register:
 api_login_check:
   path: /api/login_check
   controller: App\Controller\AuthController::getTokenUser
-
-test:
-  path: /api/test
-  controller: App\Controller\ApiController::test
