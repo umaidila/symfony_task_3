@@ -18,11 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Security;
 
 class AuthController extends ApiController
 {
 
-    public function register(Request $request, UserPasswordEncoderInterface $encoder)
+    public function register(Request $request,UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
     {
         $em = $this->getDoctrine()->getManager();
         $request = $this->transformJsonBody($request);
@@ -33,6 +35,9 @@ class AuthController extends ApiController
             return $this->respondValidationError("Invalid Username or Password or Email");
         }
 
+        if ($userRepository->findBy(["username"=>$username])!=null){
+            return $this->respondValidationError("User Already Exists");
+        }
 
         $user = new User($username);
         $user->setPassword($encoder->encodePassword($user, $password));
