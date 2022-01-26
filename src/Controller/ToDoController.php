@@ -1,13 +1,13 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: hicham benkachoud
  * Date: 02/01/2020
- * Time: 22:44
+ * Time: 22:44.
  */
 
 namespace App\Controller;
-
 
 use App\Entity\ToDo;
 use App\Repository\ToDoRepository;
@@ -19,40 +19,35 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Class ToDoController
- * @package App\Controller
+ * Class ToDoController.
+ *
  * @Route("/api", name="todo_api")
  */
 class ToDoController extends AbstractController
 {
     /**
-     * @param ToDoRepository $todoRepository
-     * @param Security $security
      * @return JsonResponse
      * @Route("/todo", name="todos_get", methods={"GET"})
      */
+    public function getTodos(ToDoRepository $todoRepository, Security $security)
+    {
+        $data = $todoRepository->findBy(['user' => $security->getUser()->getUsername()]);
 
-    public function getTodos(ToDoRepository $todoRepository, Security $security){
-        $data = $todoRepository->findBy(["user" => $security->getUser()->getUsername()]);
         return $this->response($data);
     }
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param ToDoRepository $todoRepository
-     * @param Security $security
      * @return JsonResponse
-     * @throws \Exception
+     *
+     * @throws Exception
      * @Route("/todo", name="todo_add", methods={"POST"})
      */
-    public function addTodo(Request $request, EntityManagerInterface $entityManager, ToDoRepository $todoRepository, Security $security){
-
-        try{
+    public function addTodo(Request $request, EntityManagerInterface $entityManager, ToDoRepository $todoRepository, Security $security)
+    {
+        try {
             $request = $this->transformJsonBody($request);
-
-            if (!$request || !$request->get('name')){
-                throw new \Exception();
+            if (!$request || !$request->get('name')) {
+                throw new Exception();
             }
 
             $todo = new Todo();
@@ -60,145 +55,136 @@ class ToDoController extends AbstractController
             $todo->setUser($security->getUser()->getUsername());
             $entityManager->persist($todo);
             $entityManager->flush();
-
             $data = [
                 'status' => 200,
-                'success' => "Post added successfully",
+                'success' => 'Post added successfully',
             ];
-            return $this->response($data);
 
-        }catch (\Exception $e){
+            return $this->response($data);
+        } catch (Exception $e) {
             $data = [
                 'status' => 422,
-                'errors' => "Data no valid",
+                'errors' => 'Data no valid',
             ];
+
             return $this->response($data, 422);
         }
-
     }
 
-
     /**
-     * @param ToDoRepository $todoRepository
-     * @param Security $security
-     * @param $id
      * @return JsonResponse
      * @Route("/todo/{id}", name="todo_get", methods={"GET"})
      */
-    public function getPost(ToDoRepository $todoRepository, Security $security,$id){
+    public function getPost(ToDoRepository $todoRepository, Security $security, int $id)
+    {
         $todo = $todoRepository->find($id);
+        if (!$todo) {
+            $data = [
+                'status' => 404,
+                'errors' => 'Post not found',
+            ];
 
-        if (!$todo){
-            $data = [
-                'status' => 404,
-                'errors' => "Post not found",
-            ];
             return $this->response($data, 404);
         }
-        if ($todo->getUser() != $security->getUser()->getUsername()){
+        if ($todo->getUser() != $security->getUser()->getUsername()) {
             $data = [
                 'status' => 404,
-                'errors' => "This is not your todo",
+                'errors' => 'This is not your todo',
             ];
+
             return $this->response($data, 404);
         }
+
         return $this->response($todo);
     }
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param ToDoRepository $todoRepository
-     * @param Security $security
-     * @param $id
      * @return JsonResponse
      * @Route("/todo/{id}", name="todo_put", methods={"PUT"})
      */
-    public function updatePost(Request $request, EntityManagerInterface $entityManager, ToDoRepository $todoRepository,Security $security, $id){
-
-        try{
+    public function updatePost(Request $request, EntityManagerInterface $entityManager, ToDoRepository $todoRepository, Security $security, int $id)
+    {
+        try {
             $todo = $todoRepository->find($id);
-
-            if (!$todo){
+            if (!$todo) {
                 $data = [
                     'status' => 404,
-                    'errors' => "Post not found",
+                    'errors' => 'Post not found',
                 ];
+
                 return $this->response($data, 404);
             }
-            if ($todo->getUser() != $security->getUser()->getUsername()){
+            if ($todo->getUser() != $security->getUser()->getUsername()) {
                 $data = [
                     'status' => 404,
-                    'errors' => "This is not your todo",
+                    'errors' => 'This is not your todo',
                 ];
+
                 return $this->response($data, 404);
             }
             $request = $this->transformJsonBody($request);
-
-            if (!$request || !$request->get('name')){
+            if (!$request || !$request->get('name')) {
                 throw new \Exception();
             }
 
             $todo->setName($request->get('name'));
             $entityManager->flush();
-
             $data = [
                 'status' => 200,
-                'errors' => "Post updated successfully",
+                'errors' => 'Post updated successfully',
             ];
-            return $this->response($data);
 
-        }catch (\Exception $e){
+            return $this->response($data);
+        } catch (\Exception $e) {
             $data = [
                 'status' => 422,
-                'errors' => "Data no valid",
+                'errors' => 'Data no valid',
             ];
+
             return $this->response($data, 422);
         }
-
     }
 
-
     /**
-     * @param ToDoRepository $todoRepository
-     * @param Security $security
-     * @param $id
      * @return JsonResponse
      * @Route("/todo/{id}", name="todo_delete", methods={"DELETE"})
      */
-    public function deletePost(EntityManagerInterface $entityManager, ToDoRepository $todoRepository,Security $security, $id){
+    public function deletePost(EntityManagerInterface $entityManager, ToDoRepository $todoRepository, Security $security, int $id)
+    {
         $todo = $todoRepository->find($id);
-
-        if (!$todo){
+        if (!$todo) {
             $data = [
                 'status' => 404,
-                'errors' => "Post not found",
+                'errors' => 'Post not found',
             ];
+
             return $this->response($data, 404);
         }
-        if ($todo->getUser() != $security->getUser()->getUsername()){
+        if ($todo->getUser() != $security->getUser()->getUsername()) {
             $data = [
                 'status' => 404,
-                'errors' => "This is not your todo",
+                'errors' => 'This is not your todo',
             ];
+
             return $this->response($data, 404);
         }
         $entityManager->remove($todo);
         $entityManager->flush();
         $data = [
             'status' => 200,
-            'errors' => "Post deleted successfully",
+            'errors' => 'Post deleted successfully',
         ];
+
         return $this->response($data);
     }
 
-
     /**
-     * Returns a JSON response
+     * Returns a JSON response.
      *
-     * @param array $data
-     * @param $status
+     * @param mixed $data
+     * @param int   $status
      * @param array $headers
+     *
      * @return JsonResponse
      */
     public function response($data, $status = 200, $headers = [])
@@ -206,11 +192,10 @@ class ToDoController extends AbstractController
         return new JsonResponse($data, $status, $headers);
     }
 
-    protected function transformJsonBody(\Symfony\Component\HttpFoundation\Request $request)
+    protected function transformJsonBody(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-
-        if ($data === null) {
+        if (null === $data) {
             return $request;
         }
 
@@ -218,5 +203,4 @@ class ToDoController extends AbstractController
 
         return $request;
     }
-
 }
