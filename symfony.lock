@@ -136,8 +136,14 @@
     "nikic/php-parser": {
         "version": "v4.13.2"
     },
+    "pdepend/pdepend": {
+        "version": "2.10.2"
+    },
     "php-cs-fixer/diff": {
         "version": "v2.0.2"
+    },
+    "phpmd/phpmd": {
+        "version": "2.11.1"
     },
     "phpstan/extension-installer": {
         "version": "1.1.0"
@@ -383,5 +389,8 @@
     },
     "symfony/yaml": {
         "version": "v5.4.0"
+    },
+    "symplify/easy-coding-standard": {
+        "version": "10.0.19"
     }
 }

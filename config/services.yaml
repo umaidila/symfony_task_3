@@ -26,5 +26,8 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    App\Service\CheckHealthService:
+        arguments:
+            $status: '%env(APP_ENV)%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
