@@ -5,11 +5,11 @@
       <paths name="myserver">
         <serverdata>
           <mappings>
-            <mapping deploy="/var/www/html/symfony5" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/var/www/html/project_prod" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath path="/var/www/html/symfony5/var" />
-            <excludedPath path="/var/www/html/symfony5/vendor" />
+            <excludedPath path="/var/www/html/project_prod/var" />
+            <excludedPath path="/var/www/html/project_prod/vendor" />
           </excludedPaths>
         </serverdata>
       </paths>
