@@ -15,7 +15,7 @@ class TestDeployController extends AbstractController
      */
     public function getDeploy()
     {
-        $data = ['deploy' => 'prod'];
+        $data = ['deplo1y' => 'prod'];
 
         return new JsonResponse($data, 200);
     }

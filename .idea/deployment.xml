@@ -5,7 +5,7 @@
       <paths name="myserver">
         <serverdata>
           <mappings>
-            <mapping deploy="/var/www/html/project_prod" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
             <excludedPath path="/var/www/html/project_prod/var" />
