@@ -1,0 +1,11 @@
+#!/bin/bash
+inpt=$(cat "$1")
+msg="Wrong commit standard: [task id] message"
+
+regex="^\[[0-9]+][a-zA-Z0-9 ]+$"
+
+if ! [[ "$inpt" =~ $regex ]]
+then
+    echo "$msg"
+    exit 1
+fi
